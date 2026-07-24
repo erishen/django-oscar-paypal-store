@@ -56,13 +56,13 @@ make up-sqlite
 
 ```bash
 # PostgreSQL 版本
-docker-compose up -d
+docker compose up -d
 
 # SQLite 版本
-docker-compose -f docker-compose.sqlite.yml up -d
+docker compose -f docker-compose.sqlite.yml up -d
 
 # 查看日志
-docker-compose logs -f web
+docker compose logs -f web
 ```
 
 ### 自动初始化
@@ -81,7 +81,7 @@ docker-compose logs -f web
 
 ```bash
 # 进入 web 容器
-docker-compose exec web bash
+docker compose exec web bash
 
 # 在容器内执行以下命令
 cd /app/sandbox
@@ -208,49 +208,49 @@ make status-sqlite         # 查看服务状态 (SQLite)
 
 #### 启动服务
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 #### 停止服务
 ```bash
-docker-compose down
+docker compose down
 ```
 
 #### 停止并删除数据卷
 ```bash
-docker-compose down -v
+docker compose down -v
 ```
 
 #### 查看日志
 ```bash
 # 查看所有服务日志
-docker-compose logs -f
+docker compose logs -f
 
 # 查看特定服务日志
-docker-compose logs -f web
-docker-compose logs -f db
+docker compose logs -f web
+docker compose logs -f db
 ```
 
 #### 重新构建镜像
 ```bash
-docker-compose build
+docker compose build
 ```
 
 #### 执行 Django 命令
 ```bash
 # 进入容器
-docker-compose exec web bash
+docker compose exec web bash
 
 # 执行迁移
-docker-compose exec web python /app/sandbox/manage.py migrate
+docker compose exec web python /app/sandbox/manage.py migrate
 
 # 创建超级用户
-docker-compose exec web python /app/sandbox/manage.py createsuperuser
+docker compose exec web python /app/sandbox/manage.py createsuperuser
 ```
 
 #### 查看运行状态
 ```bash
-docker-compose ps
+docker compose ps
 ```
 
 ## 使用 SQLite 替代 PostgreSQL
@@ -293,17 +293,17 @@ make up-sqlite
 ## 故障排查
 
 ### 数据库连接失败
-- 检查 db 服务是否正常运行：`docker-compose ps db`
-- 查看数据库日志：`docker-compose logs db`
+- 检查 db 服务是否正常运行：`docker compose ps db`
+- 查看数据库日志：`docker compose logs db`
 - 确认数据库健康检查通过
 
 ### 静态文件 404
-- 重新收集静态文件：`docker-compose exec web python /app/sandbox/manage.py collectstatic --noinput`
+- 重新收集静态文件：`docker compose exec web python /app/sandbox/manage.py collectstatic --noinput`
 
 ### 无法访问应用
 - 检查端口是否被占用：`lsof -i :8080`
-- 确认服务正常运行：`docker-compose ps`
-- 查看服务日志：`docker-compose logs web`
+- 确认服务正常运行：`docker compose ps`
+- 查看服务日志：`docker compose logs web`
 
 ## 备注
 

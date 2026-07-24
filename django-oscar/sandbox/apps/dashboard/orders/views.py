@@ -128,6 +128,14 @@ class OrderDetailView(CoreOrderDetailView):
         source.amount_refunded += amount
         source.save()
 
+        # Oscar 4.x does NOT auto-update the order status from payment
+        # events, so flip it explicitly once the PayPal source is fully
+        # refunded. Otherwise the dashboard keeps showing the initial
+        # 'Pending' even though the money is back with the buyer.
+        if source.amount_debited > 0 and source.amount_refunded >= source.amount_debited:
+            if order.status != 'Refunded':
+                order.set_status('Refunded')
+
         messages.success(
             request,
             _("PayPal refund %(rid)s %(status)s -- %(amount)s %(cur)s "

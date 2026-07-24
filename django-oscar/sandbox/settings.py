@@ -401,10 +401,11 @@ OSCAR_INITIAL_LINE_STATUS = 'Pending'
 
 # This dict defines the new order statuses than an order can move to
 OSCAR_ORDER_STATUS_PIPELINE = {
-    'Pending': ('Being processed', 'Cancelled',),
-    'Being processed': ('Complete', 'Cancelled',),
+    'Pending': ('Being processed', 'Cancelled', 'Refunded',),
+    'Being processed': ('Complete', 'Cancelled', 'Refunded',),
     'Cancelled': (),
-    'Complete': (),
+    'Complete': ('Refunded',),
+    'Refunded': (),
 }
 
 # This dict defines the line statuses that will be set when an order's status

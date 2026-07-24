@@ -61,6 +61,28 @@ RUN pip install --no-cache-dir requests
 # even if SCSS compilation fails in this environment.
 RUN npm install && npm run build || echo "npm build skipped: frontend assets may be missing"
 
+# Oscar only ships its precompiled static assets (styles.css, dashboard.css, JS,
+# webfonts) inside the PyPI wheel — the Git source tree gitignores them as build
+# artifacts. Without copying them into the editable install, every page 404s on
+# /static/oscar/css/styles.css and the whole UI loses styling. Pull the wheel
+# matching the installed Oscar version and extract its static into the package.
+RUN PIP_VER="$(python -c 'import importlib.metadata as m; print(m.version("django-oscar"))')" \
+ && pip download --no-deps -d /tmp/oscar_whl "django-oscar==$PIP_VER" \
+ && python - <<'PY'
+import zipfile, glob, os, shutil
+whl = glob.glob('/tmp/oscar_whl/*.whl')[0]
+with zipfile.ZipFile(whl) as z:
+    z.extractall('/tmp/oscar_static')
+src = '/tmp/oscar_static/oscar/static/oscar'
+dst = '/app/src/oscar/static/oscar'
+os.makedirs(os.path.dirname(dst), exist_ok=True)
+if os.path.isdir(dst):
+    shutil.rmtree(dst)
+shutil.copytree(src, dst)
+shutil.rmtree('/tmp/oscar_whl')
+shutil.rmtree('/tmp/oscar_static')
+PY
+
 USER django
 
 WORKDIR /app/sandbox/

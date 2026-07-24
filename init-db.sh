@@ -23,11 +23,15 @@ if [ "$USER_COUNT" -lt 1 ]; then
     python manage.py oscar_populate_countries --initial-only
     python manage.py loaddata fixtures/pages.json fixtures/ranges.json fixtures/offers.json
     python manage.py loaddata fixtures/orders.json
-    python manage.py collectstatic --noinput
     echo "Initial data loaded successfully!"
 else
     echo "Data already exists. Skipping data loading."
 fi
+
+# Always collect static assets — this MUST run on every start, not only on the
+# first data load. Otherwise a rebuilt image (empty STATIC_ROOT) or a restart with
+# existing data never populates /static, and every CSS/JS 404s (styles.css 404).
+python manage.py collectstatic --noinput
 
 # Always rebuild search index to ensure it's available
 echo "Rebuilding search index..."

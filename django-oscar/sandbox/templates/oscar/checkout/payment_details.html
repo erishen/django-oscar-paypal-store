@@ -1,0 +1,38 @@
+{% extends "oscar/checkout/checkout.html" %}
+{% load i18n %}
+
+{% block title %}
+    {% trans "Payment details" %} | {{ block.super }}
+{% endblock %}
+
+{% block checkout_nav %}
+    {% include 'oscar/checkout/nav.html' with step=3 %}
+{% endblock %}
+
+{% block checkout_title %}{% trans "Enter payment details" %}{% endblock %}
+
+{% block order_contents %}{% endblock %}
+{% block shipping_address %}{% endblock %}
+{% block shipping_method %}{% endblock %}
+{% block payment_method %}{% endblock %}
+
+{% block payment_details %}
+    {% block payment_details_content %}
+        {% if request.session.paypal_error %}
+            <div class="alert alert-danger">
+                <strong>{% trans "PayPal error:" %}</strong> {{ request.session.paypal_error }}
+            </div>
+        {% endif %}
+
+        <p>{% trans "Pay securely with your PayPal account:" %}</p>
+        <a href="{% url 'paypal_express:start' %}" class="btn btn-primary btn-lg">
+            <i class="fa fa-paypal"></i> {% trans "Pay with PayPal" %}
+        </a>
+
+        <hr>
+
+        <a id="view_preview" href="{% url 'checkout:preview' %}" class="btn btn-default btn-lg">
+            {% trans "Continue" %}
+        </a>
+    {% endblock payment_details_content %}
+{% endblock payment_details %}

@@ -1,0 +1,90 @@
+{% load i18n %}
+
+<nav id="top_page" class="navbar navbar-expand-lg navbar-light bg-light accounts">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".account-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="container">
+
+        <div class="navbar-collapse account-collapse collapse">
+            {% block nav_account_languages %}
+            {% if LANGUAGES|length > 1 %}
+                {# Compact EN / 中文 toggle (demo only ships these two). Native <select> over 21 Oscar languages rendered Chinese names on zh-cn page and looked broken — two buttons are cleaner. #}
+                <form id="language_selector" class="form-inline mb-0 mt-2 mt-lg-0" action="{% url 'set_language' %}" method="post">
+                    {% csrf_token %}
+                    <input name="next" type="hidden" id="lang_next" value="/" />
+                    <input type="hidden" name="language" id="lang_code" value="" />
+                    <div class="btn-group btn-group-sm lang-switch" role="group" aria-label="Language">
+                        <button type="button" class="btn btn-outline-secondary lang-btn{% if LANGUAGE_CODE == 'en-gb' %} active{% endif %}" data-lang="en-gb">EN</button>
+                        <button type="button" class="btn btn-outline-secondary lang-btn{% if LANGUAGE_CODE == 'zh-cn' %} active{% endif %}" data-lang="zh-cn">中文</button>
+                    </div>
+                </form>
+                <script>
+                  (function () {
+                    /* Strip the leading language segment so `next` is language-neutral.
+                       After switching, Django i18n re-prefixes the path with the new
+                       language — otherwise we'd bounce back to the old prefix. */
+                    var p = window.location.pathname || '/';
+                    var seg = p.split('/')[1];
+                    if (seg) { p = p.replace('/' + seg, '') || '/'; }
+                    p += window.location.search || '';
+                    var n = document.getElementById('lang_next');
+                    if (n) { n.value = p; }
+                    /* Wire the language buttons (hidden input + submit). */
+                    document.querySelectorAll('.lang-btn').forEach(function (b) {
+                      b.addEventListener('click', function () {
+                        var code = b.getAttribute('data-lang');
+                        if (code === '{{ LANGUAGE_CODE }}') { return; }
+                        document.getElementById('lang_code').value = code;
+                        document.getElementById('language_selector').submit();
+                      });
+                    });
+                  })();
+                </script>
+                {% endif %}
+            {% endblock %}
+            <ul class="navbar-nav ml-md-auto d-md-flex">
+                {% if user.is_authenticated %}
+                {% block nav_account_navbar_authenticated %}
+                    <li class="nav-item mr-2">
+                        {% if num_unread_notifications > 0 %}
+                            {# If user has new notifications - we change account link to go to inbox #}
+                            <a href="{% url 'customer:notifications-inbox' %}" class="nav-link mt-2 mt-lg-0">
+                                <i class="far fa-user mr-2"></i>
+                                {% trans "Account" %}
+                                <span class="badge badge-warning">{{ num_unread_notifications }}</span>
+                            </a>
+                        {% else %}
+                            <a href="{% url 'customer:summary' %}" class="nav-link mt-2 mt-lg-0">
+                                <i class="far fa-user mr-2"></i>
+                                {% trans "Account" %}
+                            </a>
+                        {% endif %}
+                    </li>
+                    {% if user.is_staff or perms.partner.dashboard_access %}
+                        <li class="nav-item mr-2">
+                            <a href="{% url 'dashboard:index' %}" class="nav-link">
+                                <i class="fas fa-list-ul mr-2"></i>
+                                {% trans "Dashboard" %}
+                            </a>
+                        </li>
+                    {% endif %}
+                    <li class="nav-item mr-2">
+                        <a id="logout_link" href="{% url 'customer:logout' %}" class="nav-link">
+                            <i class="fas fa-sign-out-alt mr-2"></i>
+                            {% trans "Logout" %}
+                        </a>
+                    </li>
+                {% endblock %}
+                {% else %}
+                    <li class="nav-item mr-2">
+                        <a id="login_link" href="{% url 'customer:login' %}" class="nav-link">
+                            <i class="fas fa-sign-in-alt mr-2"></i>
+                            {% trans "Login or register" %}
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

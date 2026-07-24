@@ -1,0 +1,36 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: oscar_web_sqlite
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      DATABASE_ENGINE: django.db.backends.sqlite3
+      DATABASE_NAME: /app/sandbox/db.sqlite
+      ALLOWED_HOSTS: localhost,127.0.0.1
+    volumes:
+      - media_volume:/app/sandbox/public/media
+      - sqlite_data:/app/sandbox
+      - ./init-db.sh:/app/init-db.sh:ro
+    networks:
+      - oscar_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  media_volume:
+    driver: local
+  sqlite_data:
+    driver: local
+
+networks:
+  oscar_network:
+    driver: bridge

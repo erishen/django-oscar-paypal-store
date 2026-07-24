@@ -1,0 +1,7 @@
+# Secrets / local env — never commit real PayPal (or any) credentials
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo

@@ -1,0 +1,55 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: oscar_postgres
+    environment:
+      POSTGRES_DB: oscar_db
+      POSTGRES_USER: oscar_user
+      POSTGRES_PASSWORD: oscar_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U oscar_user -d oscar_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - oscar_network
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: oscar_web
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PORT: "5432"
+      ALLOWED_HOSTS: localhost,127.0.0.1,web
+    volumes:
+      - media_volume:/app/sandbox/public/media
+      - ./init-db.sh:/app/init-db.sh:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - oscar_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  postgres_data:
+    driver: local
+  media_volume:
+    driver: local
+
+networks:
+  oscar_network:
+    driver: bridge

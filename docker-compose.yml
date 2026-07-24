@@ -8,9 +8,10 @@ services:
     image: postgres:15-alpine
     container_name: oscar_postgres
     environment:
-      POSTGRES_DB: oscar_db
-      POSTGRES_USER: oscar_user
-      POSTGRES_PASSWORD: oscar_password
+      POSTGRES_DB: ${DATABASE_NAME:-oscar_db}
+      POSTGRES_USER: ${DATABASE_USER:-oscar_user}
+      # Read from .env (never hardcode secrets in this committed file)
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:?DATABASE_PASSWORD must be set in .env}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:

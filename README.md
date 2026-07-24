@@ -1,4 +1,4 @@
-# oscar-paypal-store
+# django-oscar-paypal-store
 
 A [Django Oscar](https://github.com/django-oscar/django-oscar) (4.1) e-commerce
 sandbox integrated with **PayPal Express Checkout**, **Simplified-Chinese (zh-CN)
@@ -46,8 +46,8 @@ localization**, and a **demo storefront UI**.
 
 ```bash
 # 1. Clone
-git clone git@github.com:erishen/oscar-paypal-store.git
-cd oscar-paypal-store
+git clone git@github.com:erishen/django-oscar-paypal-store.git
+cd django-oscar-paypal-store
 
 # 2. Create your environment file (REQUIRED — see note below)
 cp .env.example .env
@@ -128,7 +128,7 @@ The active languages are registered in `settings.LANGUAGES` as **`en-gb`** and
 ## Project structure
 
 ```
-oscar-paypal-store/
+django-oscar-paypal-store/
 ├── django-oscar/                 # Vendored Django Oscar source + sandbox (customized)
 │   └── sandbox/
 │       ├── apps/

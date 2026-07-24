@@ -1,4 +1,4 @@
-# oscar-paypal-store
+# django-oscar-paypal-store
 
 一个基于 [Django Oscar](https://github.com/django-oscar/django-oscar)（4.1）的电子商务沙箱，集成了 **PayPal Express Checkout**、**简体中文（zh-CN）本地化** 与一个 **演示版店铺 UI**。
 
@@ -42,8 +42,8 @@
 
 ```bash
 # 1. 克隆
-git clone git@github.com:erishen/oscar-paypal-store.git
-cd oscar-paypal-store
+git clone git@github.com:erishen/django-oscar-paypal-store.git
+cd django-oscar-paypal-store
 
 # 2. 创建环境文件（必须 —— 见下方说明）
 cp .env.example .env
@@ -114,7 +114,7 @@ PayPal 凭据**绝不入库**（`.env` 已被 gitignore），也从未进入过 
 ## 项目结构
 
 ```
-oscar-paypal-store/
+django-oscar-paypal-store/
 ├── django-oscar/                 # Vendored Django Oscar 源码 + sandbox（已定制）
 │   └── sandbox/
 │       ├── apps/

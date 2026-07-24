@@ -1,3 +1,8 @@
+# Compose project name is pinned so renaming the directory does NOT change
+# the volume/network prefix. The running containers, the postgres_data volume
+# (django-oscar-research_postgres_data) and all hot-patched code stay intact.
+name: django-oscar-research
+
 services:
   db:
     image: postgres:15-alpine

@@ -56,6 +56,8 @@ docker compose up -d --build
 # 4. 打开店铺
 #    中文： http://localhost:8080/zh-cn/
 #    英文： http://localhost:8080/en-gb/
+#    （若宿主机 8080 已被占用，在 .env 里设 WEB_PORT，如 8092，
+#     然后访问 http://localhost:8092/）
 ```
 
 > 🔴 **`.env` 是必填项，且不在仓库中**（已被 gitignore）。
@@ -90,6 +92,7 @@ Django 管理后台位于 `/zh-cn/admin/`（或 `/en-gb/admin/`）。
 | `PAYPAL_CLIENT_ID` | **是\*** | 沙箱客户端 ID。`*` 仅结账时需要。 |
 | `PAYPAL_CLIENT_SECRET` | **是\*** | 沙箱客户端密钥。 |
 | `PAYPAL_MODE` | 否 | `sandbox`（默认）。保持沙箱。 |
+| `WEB_PORT` | 否 | 宿主机发布的端口（容器内部固定监听 8080）。默认 `8080`。若宿主机的 8080 已被占用，可设为如 `8092`。 |
 
 PayPal 凭据**绝不入库**（`.env` 已被 gitignore），也从未进入过 git 历史。
 

@@ -137,8 +137,12 @@ exit
 ### web (Django Oscar)
 - 基于官方 python:3.12 镜像扩展的自定义 Dockerfile
 - 使用 uWSGI 运行
-- 监听端口：8080
+- 监听端口：容器内部 8080；宿主机对外端口由 `WEB_PORT`（默认 8080）控制。
 - 自动连接 PostgreSQL 数据库
+
+> ⚠️ **端口冲突**：若宿主机 8080 已被占用，`make up` 会报
+> `bind: address already in use`。在 `.env` 里加一行 `WEB_PORT=8092`（或任意空闲端口），
+> 重新 `make up` 即可，访问地址相应改为 `http://<host>:8092/`。
 
 ## 环境变量配置
 

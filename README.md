@@ -60,6 +60,8 @@ docker compose up -d --build
 # 4. Open the storefront
 #    Chinese : http://localhost:8080/zh-cn/
 #    English : http://localhost:8080/en-gb/
+#    (If 8080 is taken on the host, set WEB_PORT in .env, e.g. 8092, and use
+#     http://localhost:8092/ instead.)
 ```
 
 > 🔴 **`.env` is required and is NOT in the repo** (gitignored).
@@ -94,6 +96,7 @@ All variables live in `.env` (copy from `.env.example`). Key entries:
 | `PAYPAL_CLIENT_ID`   | **yes\***| Sandbox client id. `*` only needed for checkout. |
 | `PAYPAL_CLIENT_SECRET`| **yes\***| Sandbox client secret. |
 | `PAYPAL_MODE`        | no       | `sandbox` (default). Keep it sandbox. |
+| `WEB_PORT`          | no       | Host port published (container listens on 8080 internally). Default `8080`. Set to e.g. `8092` if `8080` is already taken on the host. |
 
 PayPal credentials are **never committed** (`.env` is gitignored) and have never
 been in the git history.

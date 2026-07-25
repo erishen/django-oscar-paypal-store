@@ -36,7 +36,9 @@ services:
     environment:
       DATABASE_HOST: db
       DATABASE_PORT: "5432"
-      ALLOWED_HOSTS: localhost,127.0.0.1,web
+      # Comma-separated hosts Django accepts. Override via ALLOWED_HOSTS in .env
+      # when serving behind a reverse proxy / custom domain (e.g. shop.example.com).
+      ALLOWED_HOSTS: "${ALLOWED_HOSTS:-localhost,127.0.0.1,web}"
     volumes:
       - media_volume:/app/sandbox/public/media
       - ./init-db.sh:/app/init-db.sh:ro

@@ -41,8 +41,18 @@ echo "6/7 - 加载分类和优惠数据..."
 python manage.py loaddata fixtures/ranges.json || echo "  ✗ 分类数据加载失败"
 python manage.py loaddata fixtures/offers.json || echo "  ✗ 优惠数据加载失败"
 
-# 7. 重建搜索索引
-echo "7/7 - 重建搜索索引..."
+# 7. 隐藏无图产品（避免前台出现破图/空图卡片）
+echo "7/8 - 隐藏无图片的展示型产品..."
+python manage.py shell -c "
+from oscar.apps.catalogue.models import Product, ProductImage
+with_img = set(ProductImage.objects.values_list('product_id', flat=True))
+qs = Product.objects.exclude(structure='child').exclude(id__in=with_img)
+n = qs.update(is_public=False)
+print('  已隐藏无图展示型产品:', n)
+" || echo "  ✗ 隐藏无图产品失败"
+
+# 8. 重建搜索索引（隐藏之后，确保索引不含已隐藏产品）
+echo "8/8 - 重建搜索索引..."
 python manage.py clear_index --noinput || echo "  ✗ 清除索引失败"
 python manage.py update_index catalogue || echo "  ✗ 建立索引失败"
 
